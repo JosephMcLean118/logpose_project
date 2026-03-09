@@ -1,0 +1,94 @@
+/* ── Base Styles ── */
+
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --accent: #5a4fd9;
+  --accent-hover: #4840b0;
+  --border: #e0e0e0;
+}
+
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+/* ── Navbar ── */
+
+.navbar {
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border);
+  padding: 0.75rem 0;
+}
+
+.navbar-brand {
+  font-size: 1.3rem;
+  letter-spacing: 0.5px;
+  color: var(--text-primary) !important;
+}
+
+.navbar-brand i {
+  color: var(--accent);
+}
+
+.nav-link {
+  color: var(--text-secondary) !important;
+  font-size: 0.9rem;
+  transition: color 0.2s ease;
+}
+
+.nav-link:hover {
+  color: var(--text-primary) !important;
+}
+
+.navbar-nav .btn-outline-accent {
+  border-color: var(--accent);
+  color: var(--accent);
+  font-size: 0.85rem;
+  padding: 0.3rem 1rem;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.navbar-nav .btn-outline-accent:hover {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  color: #fff;
+}
+
+/* ── Main Content ── */
+
+main {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+/* ── Footer ── */
+
+.footer {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  border-top: 1px solid var(--border);
+}
+
+.footer .fw-bold {
+  font-size: 1.1rem;
+}
+
+.footer .fw-bold i {
+  color: var(--accent);
+}
+
+/* ── Utility ── */
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+a:hover {
+  color: var(--accent-hover);
+}
