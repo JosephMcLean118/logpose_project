@@ -92,3 +92,19 @@ a {
 a:hover {
   color: var(--accent-hover);
 }
+
+/* ── Button Styling ── */
+.btn-outline-accent {
+    border-color: var(--accent);
+    color: var(--accent);
+    font-size: 0.85rem;
+    padding: 0.3rem 1rem;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-outline-accent:hover {
+    background-color: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+}

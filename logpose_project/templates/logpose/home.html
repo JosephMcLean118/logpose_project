@@ -1,0 +1,112 @@
+{% extends 'logpose/base.html' %}
+{% load static %}
+
+{% block body_block %}
+    <div class="container">
+        <div class="row align-items-stretch">
+            <div class="col-6">
+            <!-- Most Popular Game -->
+                <div class="hold title">
+                    <h1>Most Popular Game</h1>
+                    <div class="card h-100" style="width: 31rem;">
+                        <img src="{% static 'styles/Images/fortnite.jpg' %}" class="card-img-top" style="width: 100%; height: auto;">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ popular_game.title }}</h5>
+                            <ul>
+                                <li><p class="card-text">Rating: {{ popular_game.avg_rating }}</p></li>
+                                <li><p class="card-text">Genre(s): {{ popular_game.avg_rating }}</p></li>
+                            </ul>
+                            <a href="#" class="btn btn-outline-accent btn-sm">Read Reviews</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6">
+            <!-- Seach For Games -->
+            <div class="hold title">
+                <h1>Search Games</h1>
+                <div class="card" style="width: 40rem;">
+                    <div class="card-body">
+                        <form method="GET" action="{% url 'logpose:search_games' %}">
+                            <div class="container mt-4">
+                                <!-- Game search input -->
+                                <div class="mb-3">
+                                    <div class="dropdown">
+                                        <label for="myInput">Enter Game</label>
+                                        <input type="text" name ="game" class="form-control dropdown-toggle" placeholder="Enter Here..." id="myInput" onkeyup="filterDropdown()" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <div id="myDropdown" class="dropdown-menu w-100 mt-0">
+                                            <span class="dropdown-item" onclick="setInput(this)">Mario</span>
+                                            <span class="dropdown-item" onclick="setInput(this)">Elden Ring</span>
+                                            <span class="dropdown-item" onclick="setInput(this)">Sonic</span>
+                                            <span class="dropdown-item" onclick="setInput(this)">FIFA</span>
+                                            <span class="dropdown-item" onclick="setInput(this)">Stardew Valley</span>
+                                            <span class="dropdown-item" onclick="setInput(this)">GTA 6</span>
+                                            <span class="dropdown-item" onclick="setInput(this)">RDR 2</span>
+
+                                            <!--
+                                            Code will be
+                                            {% for game in games %}
+                                                <span class="dropdown-item" onclick="setInput(this)">{{ game.title }}</span>
+                                            {% endfor %}
+                                            -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Filters section -->
+                                <label for="gameSearch" class="form-label"><h5>Filters</h5></label>
+                                <div class="mb-3">
+                                    <select class="form-select" name="genre">
+                                        <option value="rock">Genres</option>
+                                        {% for genre in genres %}
+                                            <option value="{{ genre }}">{{ genre.title }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <select class="form-select" name="stars">
+                                        <option value="">Stars</option>
+                                        <option value=1>1</option>
+                                        <option value=2>2</option>
+                                        <option value=3>3</option>
+                                        <option value=4>4</option>
+                                        <option value=5>5</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="row">
+                                        <div class="col-sm-6 mb-3">
+                                            <label for="start" class="form-label">Start date:</label>
+                                            <input
+                                                type="date"
+                                                class="form-control"
+                                                id="start"
+                                                name="trip-start"
+                                                value="2018-07-22"
+                                                min="2018-01-01"
+                                                max="2018-12-31" />
+                                        </div>
+                                        <div class="col-sm-6 mb-3">
+                                            <label for="end" class="form-label">End date:</label>
+                                            <input
+                                                type="date"
+                                                class="form-control"
+                                                id="end"
+                                                name="trip-end"
+                                                value="2018-07-22"
+                                                min="2018-01-01"
+                                                max="2018-12-31" />
+                                        </div>
+                                    </div>
+                                <!-- Submit button -->
+                                </div>
+                                <button type="submit" class="btn btn-outline-accent btn-sm mt-3">Search</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script src="{% static 'js/script.js' %}"></script>
+{% endblock %}
