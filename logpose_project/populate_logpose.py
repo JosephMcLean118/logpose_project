@@ -112,11 +112,23 @@ def add_genre(name):
 def add_game(title, release_date, image):
     """
     Creates or retrieves a Game object.
+    Uses defaults to set required fields during creation.
     """
-    g = Game.objects.get_or_create(title=title)[0]
-    g.release_date = release_date
-    g.image = f"game_images/{image}"  # Prepend folder path
-    g.save()
+    g, created = Game.objects.get_or_create(
+        title=title,
+        defaults={
+            'release_date': release_date,
+            'image': f"game_images/{image}"
+        }
+    )
+    
+    # If game already existed, update its fields 
+    # this allows us to run the script multiple times without creating duplicates, but still update existing entries if needed
+    if not created:
+        g.release_date = release_date
+        g.image = f"game_images/{image}"
+        g.save()
+    
     return g
 
 def add_user(username, email, password, bio):
@@ -141,11 +153,24 @@ def add_review(user, game, rating, body):
     Creates or retrieves a Review.
     Links user to game with rating and text.
     """
-    r = Review.objects.get_or_create(user=user, game=game)[0]
-    r.rating = rating
-    r.body = body
-    r.save()
+    r, created = Review.objects.get_or_create(
+        user=user,
+        game=game,
+        defaults={
+            'rating': rating,
+            'body': body
+        }
+    )
+    
+    # If review already existed, update its fields
+    # # this allows us to run the script multiple times without creating duplicates, but still update existing entries if needed
+    if not created:
+        r.rating = rating
+        r.body = body
+        r.save()
+
     return r
+
 
 if __name__ == '__main__':
     print('Starting Logpose population script...')
