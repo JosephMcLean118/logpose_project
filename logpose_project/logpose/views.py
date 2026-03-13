@@ -7,31 +7,46 @@ from django.http import HttpResponse
 
 # index should return homepage
 def index(request):
+    """
+    Return render of homepage template.
+    Context dictionary contains: All games, genres, most_popular_game
+    """
     context = {}
 
     games = Game.objects.all()
+    genres = Genre.objects.all()
 
     if games.exists():
-        most_popular_game = max(games, key=lambda g: g.avg_rating() or 0)
-    else:
-        # Create some default games if DB is empty
-        most_popular_game = Game.objects.create(title="Super Fun Game", release_date="2026-01-01")
 
-    context["popular_game"] = most_popular_game
-    context["genres"] = Genre.objects.all()
-    context["games"] = games
-    return render(request, 'logpose/home.html', context)
+        # Find most popular game
+        most_popular_game = max(games, key=lambda g: g.avg_rating() or 0)
+        context["popular_game"] = most_popular_game
+
+        # Get all genre names as a list then join as string
+        genre_names = most_popular_game.genres.values_list('name', flat=True)
+        most_popular_game.genre_list = ", ".join(genre_names)
+
+        context["genres"] = genres
+        context["games"] = games
+
+        return render(request, 'logpose/home.html', context)
 
 
 def search_games(request):
+    """
+    Return filtered render of reviews page template.
+    ------------
+    NOT COMPLETE
+    ------------
+    Will complete once reviews page is made
+    """
     form = GameSearchForm(request.GET)
     if form.is_valid():
         game_name = form.cleaned_data['game']
         genre = form.cleaned_data['genre']
         stars = form.cleaned_data['stars']
-        start = form.cleaned_data['date_start']
-        end = form.cleaned_data['date_end']
-        print(game_name)
-        return HttpResponse(f"Game: {game_name}, Genre: {genre}, Stars: {stars}, Start: {start}, End: {end}"  )
+        year = str(form.cleaned_data['year'])[:-6]
+        print(form)
+        return HttpResponse(f"Game: {game_name}, Genre: {genre}, Stars: {stars}, Year: {year}"  )
     print(form.date_start)
     return HttpResponse("Fail ")
