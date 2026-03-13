@@ -29,7 +29,9 @@ def search_games(request):
         game_name = form.cleaned_data['game']
         genre = form.cleaned_data['genre']
         stars = form.cleaned_data['stars']
+        start = form.cleaned_data['date_start']
+        end = form.cleaned_data['date_end']
         print(game_name)
-        return HttpResponse(f"Game: {game_name}, Genre: {genre}, Stars: {stars}"  )
-    print(form.errors)
+        return HttpResponse(f"Game: {game_name}, Genre: {genre}, Stars: {stars}, Start: {start}, End: {end}"  )
+    print(form.date_start)
     return HttpResponse("Fail ")
