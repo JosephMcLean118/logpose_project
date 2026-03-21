@@ -4,5 +4,5 @@ from logpose import views
 app_name = 'logpose'
 
 urlpatterns = [
-    path('', views.index, name='index'),
+    path('reviews/', views.reviews, name='reviews'),
 ]
