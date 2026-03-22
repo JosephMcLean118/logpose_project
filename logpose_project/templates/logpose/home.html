@@ -16,7 +16,7 @@
                                 <li><p class="card-text">Rating: {{ popular_game.avg_rating }}</p></li>
                                 <li><p class="card-text">Genre(s): {{ popular_game.genre_list }}</p></li>
                             </ul>
-                            <a href="#" class="btn btn-outline-accent btn-sm">Read Reviews</a>
+                            <a href="{% url 'logpose:reviews_for_game' popular_game.slug %}" class="btn btn-outline-accent btn-sm">Read Reviews</a>
                         </div>
                     </div>
                 </div>

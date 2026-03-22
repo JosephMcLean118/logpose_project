@@ -18,14 +18,6 @@ def populate():
     
     print("Starting population script...")
 
-    # Clear old data
-    Genre.objects.all().delete()
-    Game.objects.all().delete()
-    User.objects.all().delete()
-    UserProfile.objects.all().delete()
-    Review.objects.all().delete()
-
-    
     # Creating genres
     # Dictionary to store genre objects for later use
     genres = {}
@@ -51,8 +43,6 @@ def populate():
                 release_date=row['Release Date'],
                 image=row['Image']
             )
-            game.save()
-            game = Game.objects.get(pk=game.pk)
 
             # Add genres to game (ManyToMany relationship)
             # Checks if Genre1,2,3 exists and are not empty

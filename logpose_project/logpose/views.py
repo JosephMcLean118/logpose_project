@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from logpose.models import Game, Genre
 from logpose.forms import GameSearchForm
 from django.http import HttpResponse
@@ -48,5 +48,16 @@ def search_games(request):
         year = str(form.cleaned_data['year'])[:-6]
         print(form)
         return HttpResponse(f"Game: {game_name}, Genre: {genre}, Stars: {stars}, Year: {year}"  )
-    print(form.date_start)
     return HttpResponse("Fail ")
+
+def reviews_for_game(request, slug):
+    """
+    Return render of reviews page, filtered by games name
+    ------------
+    NOT COMPLETE
+    ------------
+    Will complete once reviews page is made
+    """
+    game = get_object_or_404(Game, slug=slug)
+    reviews = game.review_set.all()  # gets all reviews for this game
+    return HttpResponse(f"Game: {game.title}, Reviews: {reviews}")
