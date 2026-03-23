@@ -82,6 +82,24 @@ main {
   color: var(--accent);
 }
 
+/* ── Auth Forms ── */
+
+.form-control:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 0.2rem rgba(90, 79, 217, 0.15);
+}
+
+.btn-accent {
+  background-color: var(--accent);
+  color: #fff;
+  border-radius: 8px;
+}
+
+.btn-accent:hover {
+  background-color: var(--accent-hover);
+  color: #fff;
+}
+
 /* ── Utility ── */
 
 a {
