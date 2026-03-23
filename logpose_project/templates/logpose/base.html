@@ -53,14 +53,17 @@
               </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="#">Logout</a>
+              <a class="nav-link" href="{% url 'logpose:logout' %}">Logout</a>
             </li>
             {% else %}
             <li class="nav-item">
-              <a class="nav-link" href="#">Login</a>
+              <a class="nav-link" href="{% url 'logpose:login' %}">Login</a>
             </li>
             <li class="nav-item ms-2">
-              <a class="btn btn-outline-accent btn-sm" href="#">
+              <a
+                class="btn btn-outline-accent btn-sm"
+                href="{% url 'logpose:register' %}"
+              >
                 Sign Up
               </a>
             </li>
@@ -76,13 +79,11 @@
     </main>
 
     <!-- Footer -->
-    <footer class="footer py-4 mt-auto">
+    <footer class="footer py-2 mt-auto">
       <div class="container">
         <div class="row align-items-center">
           <div class="col-md-4">
-            <span class="fw-bold">
-              <i class="bi bi-compass"></i> Logpose
-            </span>
+            <span class="fw-bold"> <i class="bi bi-compass"></i> Logpose </span>
             <p class="text-secondary mb-0 mt-1 small">
               Discover and review your favourite games.
             </p>
