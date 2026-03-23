@@ -1,0 +1,24 @@
+{% extends 'logpose/base.html' %}
+
+{% block body_block %}
+<div class="container mt-4">
+    <h1>{{ review.game.title }}</h1>
+
+    {% if review.game.image %}
+        <img 
+            src="{{ review.game.image.url }}" 
+            alt="{{ review.game.title }}" 
+            class="img-fluid rounded"
+            style="width: 300px; height: 180px; object-fit: cover;">
+    {% endif %}
+
+
+    <p><strong>{{ review.user.username }}</strong></p>
+    <p>Rating: {{ review.rating }}/5</p>
+    <p>{{ review.body }}</p>
+
+    <a href="{% url 'logpose:create_review' %}" class="btn btn-primary mt-3">
+        Write another review
+    </a>
+</div>
+{% endblock %}

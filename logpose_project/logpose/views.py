@@ -1,4 +1,9 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.models import User
+from logpose.models import Review, UserProfile
+from logpose.forms import ReviewForm
+
+# Create your views here.
 from django.http import HttpResponse
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
@@ -9,6 +14,55 @@ from logpose.forms import UserForm, UserProfileForm, GameSearchForm
 
 # index should return homepage
 def index(request):
+    """
+    Return render of homepage template.
+    Context dictionary contains: All games, genres, most_popular_game
+    """
+    context = {}
+
+    games = Game.objects.all()
+    genres = Genre.objects.all()
+
+    if not games.exists():
+        return HttpResponse("No Games Found")
+
+    # Find most popular game
+    most_popular_game = max(games, key=lambda g: g.avg_rating() or 0)
+    context["popular_game"] = most_popular_game
+
+    # Get all genre names as a list then join as string
+    genre_names = most_popular_game.genres.values_list('name', flat=True)
+    most_popular_game.genre_list = ", ".join(genre_names)
+
+    context["genres"] = genres
+    context["games"] = games
+
+    return render(request, 'logpose/home.html', context)
+  
+def review_detail(request, review_id):
+    review = get_object_or_404(Review, id=review_id)
+
+    profile = UserProfile.objects.filter(user=review.user).first()
+
+    context = {
+        'review': review,
+        'profile': profile,
+    }
+    return render(request, 'logpose/review_detail.html', context)
+
+
+def create_review(request):
+    if request.method == 'POST':
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.user = User.objects.first()
+            review.save()
+            return redirect('logpose:review_detail', review_id=review.id)
+    else:
+        form = ReviewForm()
+
+    return render(request, 'logpose/create_review.html', {'form': form})
     """
     Return render of homepage template.
     Context dictionary contains: All games, genres, most_popular_game
