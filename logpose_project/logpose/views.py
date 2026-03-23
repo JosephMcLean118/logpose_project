@@ -63,32 +63,6 @@ def create_review(request):
         form = ReviewForm()
 
     return render(request, 'logpose/create_review.html', {'form': form})
-    """
-    Return render of homepage template.
-    Context dictionary contains: All games, genres, most_popular_game
-    """
-    context = {}
-
-    games = Game.objects.all()
-    genres = Genre.objects.all()
-
-    if not games.exists():
-        return HttpResponse("No Games Found")
-
-    # Find most popular game
-    most_popular_game = max(games, key=lambda g: g.avg_rating() or 0)
-    context["popular_game"] = most_popular_game
-
-    # Get all genre names as a list then join as string
-    genre_names = most_popular_game.genres.values_list('name', flat=True)
-    most_popular_game.genre_list = ", ".join(genre_names)
-
-    context["genres"] = genres
-    context["games"] = games
-
-    return render(request, 'logpose/home.html', context)
-
-
 
 def search_games(request):
     """
