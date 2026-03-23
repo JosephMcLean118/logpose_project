@@ -1,0 +1,162 @@
+{% extends 'logpose/base.html' %}
+{% load static %}
+
+{% block title %}Reviews - Patch Notes{% endblock %}
+
+{% block body_block %}
+<div class="container mt-4">
+    
+    <!-- genre tabs -->
+    <div class="mb-4">
+        <h2>Browse by Genre</h2>
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="nav-link {% if not current_genre %}active{% endif %}" 
+                   href="{% url 'logpose:reviews' %}">All</a>
+            </li>
+            {% for genre in genres %}
+            <li class="nav-item">
+                <a class="nav-link {% if current_genre == genre.name %}active{% endif %}" 
+                   href="?genre={{ genre.name }}">{{ genre.name }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    
+    <div class="row">
+        <!-- LEFT: REVIEWS -->
+        <div class="col-md-8">
+            
+            <!-- FILTER BAR -->
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">Filters</h5>
+                    <form method="GET" action="{% url 'logpose:reviews' %}">
+                        <div class="row g-3">
+                            <!-- Search by game name -->
+                            <div class="col-md-6">
+                                <input type="text" 
+                                       class="form-control" 
+                                       name="search" 
+                                       placeholder="Search game title..."
+                                       value="{{ current_search|default:'' }}">
+                            </div>
+                            
+                            <!-- Filter by rating -->
+                            <div class="col-md-2">
+                                <select class="form-select" name="rating">
+                                    <option value="">All Ratings</option>
+                                    {% for i in "12345" %}
+                                    <option value="{{ i }}" {% if current_rating == i %}selected{% endif %}>
+                                        {{ i }} ⭐
+                                    </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            
+                            <!-- Filter by year -->
+                            <div class="col-md-2">
+                                <input type="number" 
+                                       class="form-control" 
+                                       name="year" 
+                                       placeholder="Year"
+                                       min="2000" 
+                                       max="2026"
+                                       value="{{ current_year|default:'' }}">
+                            </div>
+                            
+                            <!-- Submit button -->
+                            <div class="col-md-2">
+                                <button type="submit" class="btn btn-primary w-100">Filter</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            
+            <!-- REVIEWS LIST -->
+            <h3>Reviews ({{ reviews.count }})</h3>
+            
+            {% if reviews %}
+                {% for review in reviews %}
+                <div class="card mb-3">
+                    <div class="row g-0">
+                        <!-- Game Image -->
+                        <div class="col-md-3">
+                            {% if review.game.image %}
+                            <img src="{{ review.game.image.url }}" 
+                                 class="img-fluid rounded-start h-100" 
+                                 alt="{{ review.game.title }}"
+                                 style="object-fit: cover;">
+                            {% else %}
+                            <div class="bg-secondary h-100 d-flex align-items-center justify-content-center">
+                                <span class="text-white">No Image</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- Review Content -->
+                        <div class="col-md-9">
+                            <div class="card-body">
+                                <!-- Game Title -->
+                                <h5 class="card-title">{{ review.game.title }}</h5>
+                                
+                                <!-- Rating -->
+                                <div class="mb-2">
+                                    {% for i in "12345" %}
+                                        {% if forloop.counter <= review.rating %}
+                                            <span class="text-warning">⭐</span>
+                                        {% else %}
+                                            <span class="text-muted">☆</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                    <span class="text-muted ms-2">{{ review.rating }}/5</span>
+                                </div>
+                                
+                                <!-- Review Text -->
+                                <p class="card-text">{{ review.body }}</p>
+                                
+                                <!-- Reviewer Info -->
+                                <p class="card-text">
+                                    <small class="text-muted">
+                                        Review by <strong>{{ review.user.username }}</strong> 
+                                        on {{ review.created_at|date:"M d, Y" }}
+                                    </small>
+                                </p>
+                                
+                                <!-- Action Button -->
+                                <a href="#" class="btn btn-outline-primary btn-sm">Read Full Review</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="alert alert-info">
+                    No reviews found matching your filters.
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- RIGHT: TOP 5 SIDEBAR -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Top 5 Games</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    {% for game in top_games %}
+                    <a href="?search={{ game.title }}" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1">{{ game.title }}</h6>
+                            <small class="text-warning">⭐ {{ game.avg_rating|floatformat:1 }}</small>
+                        </div>
+                        <small class="text-muted">{{ game.review_count }} review{{ game.review_count|pluralize }}</small>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

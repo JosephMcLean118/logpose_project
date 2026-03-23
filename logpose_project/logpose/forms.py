@@ -17,3 +17,10 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('bio', 'profile_image',)
+
+
+class GameSearchForm(forms.Form):
+    game = forms.CharField(required=False)
+    genre = forms.CharField(required=False)
+    stars = forms.IntegerField(required=False)
+    year = forms.IntegerField(required=False)
