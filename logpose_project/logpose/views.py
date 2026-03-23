@@ -38,7 +38,7 @@ def edit_profile(request):
     
     return render(request, 'edit_profile.html', {'profile': profile})
 #-------------------------------------------------------------------------
-def index(request)
+def index(request):
     """
     Return render of homepage template.
     Context dictionary contains: All games, genres, most_popular_game
