@@ -1,24 +1,54 @@
 {% extends 'logpose/base.html' %}
 
+{% block title_block %}{{ review.game.title }}{% endblock %}
+
 {% block body_block %}
-<div class="container mt-4">
-    <h1>{{ review.game.title }}</h1>
-
-    {% if review.game.image %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-8 col-lg-6">
+    <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+      {% if review.game.image %}
         <img 
-            src="{{ review.game.image.url }}" 
-            alt="{{ review.game.title }}" 
-            class="img-fluid rounded"
-            style="width: 300px; height: 180px; object-fit: cover;">
-    {% endif %}
+          src="{{ review.game.image.url }}" 
+          alt="{{ review.game.title }}"
+          class="card-img-top"
+          style="height: 260px; object-fit: cover; border-top-left-radius: 12px; border-top-right-radius: 12px;"
+        >
+      {% endif %}
 
+      <div class="card-body p-4">
+        <h1 class="fw-bold mb-3">{{ review.game.title }}</h1>
 
-    <p><strong>{{ review.user.username }}</strong></p>
-    <p>Rating: {{ review.rating }}/5</p>
-    <p>{{ review.body }}</p>
+        <div class="d-flex align-items-center mb-3">
+          {% if profile and profile.profile_image %}
+            <img 
+              src="{{ profile.profile_image.url }}" 
+              alt="{{ review.user.username }}"
+              style="width: 50px; height: 50px; object-fit: cover; border-radius: 50%; margin-right: 12px;"
+            >
+          {% endif %}
+          <div>
+            <div class="fw-semibold">{{ review.user.username }}</div>
+            <small class="text-secondary">{{ review.created_at|date:"d M Y, H:i" }}</small>
+          </div>
+        </div>
 
-    <a href="{% url 'logpose:create_review' %}" class="btn btn-primary mt-3">
-        Write another review
-    </a>
+        <p class="mb-3 fs-5">
+          {% for i in "12345" %}
+            {% if forloop.counter <= review.rating %}
+              ★
+            {% else %}
+              ☆
+            {% endif %}
+          {% endfor %}
+        </p>
+
+        <p class="mb-4">{{ review.body }}</p>
+
+        <a href="{% url 'logpose:create_review' %}" class="btn btn-accent">
+          Write another review
+        </a>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}

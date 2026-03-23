@@ -38,7 +38,7 @@ def edit_profile(request):
     
     return render(request, 'edit_profile.html', {'profile': profile})
 #-------------------------------------------------------------------------
-def index(request)
+def index(request):
     """
     Return render of homepage template.
     Context dictionary contains: All games, genres, most_popular_game
@@ -66,7 +66,6 @@ def index(request)
   
 def review_detail(request, review_id):
     review = get_object_or_404(Review, id=review_id)
-
     profile = UserProfile.objects.filter(user=review.user).first()
 
     context = {
@@ -75,20 +74,19 @@ def review_detail(request, review_id):
     }
     return render(request, 'logpose/review_detail.html', context)
 
-
+@login_required
 def create_review(request):
     if request.method == 'POST':
         form = ReviewForm(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
-            review.user = User.objects.first()
+            review.user = request.user
             review.save()
             return redirect('logpose:review_detail', review_id=review.id)
     else:
         form = ReviewForm()
 
     return render(request, 'logpose/create_review.html', {'form': form})
-
 
 def search_games(request):
     """
@@ -231,4 +229,3 @@ def reviews(request):
         'current_search': search_query,
     }
     return render(request, 'logpose/reviews.html', context)
-
