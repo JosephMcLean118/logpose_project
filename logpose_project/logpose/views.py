@@ -18,21 +18,22 @@ def index(request):
     games = Game.objects.all()
     genres = Genre.objects.all()
 
-    if games.exists():
+    if not games.exists():
+        return HttpResponse("No Games Found")
 
-        # Find most popular game
-        most_popular_game = max(games, key=lambda g: g.avg_rating() or 0)
-        context["popular_game"] = most_popular_game
+    # Find most popular game
+    most_popular_game = max(games, key=lambda g: g.avg_rating() or 0)
+    context["popular_game"] = most_popular_game
 
-        # Get all genre names as a list then join as string
-        genre_names = most_popular_game.genres.values_list('name', flat=True)
-        most_popular_game.genre_list = ", ".join(genre_names)
+    # Get all genre names as a list then join as string
+    genre_names = most_popular_game.genres.values_list('name', flat=True)
+    most_popular_game.genre_list = ", ".join(genre_names)
 
-        context["genres"] = genres
-        context["games"] = games
+    context["genres"] = genres
+    context["games"] = games
 
-        return render(request, 'logpose/home.html', context)
-    return HttpResponse("No Games Found")
+    return render(request, 'logpose/home.html', context)
+
 
 
 def search_games(request):
