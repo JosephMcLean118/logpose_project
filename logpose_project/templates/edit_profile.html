@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit profile</title>
+</head>
+<body>
+
+    <div style="max-width: 500px; margin: 50px auto; border: 1px solid #ccc; padding: 20px; border-radius: 8px;">
+        <h2>Edit profile</h2>
+
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+
+            <div style="margin-bottom: 15px;">
+                <label><strong>Bio：</strong></label><br>
+                <textarea name="bio" rows="5" style="width: 100%;">{{ profile.bio }}</textarea>
+            </div>
+
+            <div style="margin-bottom: 15px;">
+                <label><strong>Profile pic：</strong></label><br>
+                <input type="file" name="profile_image">
+                <p style="font-size: 0.8em; color: gray;">Now：{{ profile.profile_image.name }}</p>
+            </div>
+
+            <hr>
+
+            <div style="text-align: space-between;">
+                <button type="submit" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none; cursor: pointer;">
+                    save
+                </button>
+                <a href="{% url 'profile' username=user.username %}" style="text-decoration: none; color: #666; margin-left: 10px;">
+                    cancel and return
+                </a>
+            </div>
+        </form>
+    </div>
+
+</body>
+</html>

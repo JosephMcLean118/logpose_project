@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ target_user.username }} Home Page</title>
+</head>
+<body>
+
+    <div style="max-width: 600px; margin: 20px auto; border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
+        
+        <h2>{{ target_user.username }} Profile</h2>
+
+        <div style="text-align: center; margin-bottom: 20px;">
+            {% if profile.profile_image %}
+                <img src="{{ profile.profile_image.url }}" alt="image" style="width:150px; height:150px; border-radius:50%; object-fit: cover; border: 2px solid #eee;">
+            {% else %}
+                <div style="width:150px; height:150px; border-radius:50%; background: #eee; line-height: 150px; margin: 0 auto;">ʕ•̀ ω • ʔ</div>
+            {% endif %}
+        </div>
+
+        <p><strong>Bio：</strong></p>
+        <div style="background: #f9f9f9; padding: 10px; border-radius: 5px; min-height: 50px;">
+            {{ profile.bio|default:"Nothing" }}
+        </div>
+
+        <p><strong>AverageRating：</strong> 
+            {% if profile.avg_rating_given %}
+                <span style="color: #f39c12;">★ {{ profile.avg_rating_given }}</span>
+            {% else %}
+                <span style="color: #999;">Nothing</span>
+            {% endif %}
+        </p>
+
+        <hr>
+
+        {% if is_me %}
+            <div style="text-align: right;">
+                <a href="{% url 'logpose:edit_profile' %}">
+                    <button style="padding: 8px 16px; cursor: pointer;">edit_profile</button>
+                </a>
+            </div>
+        {% endif %}
+    </div>
+
+</body>
+</html>
