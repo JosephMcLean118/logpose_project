@@ -32,7 +32,7 @@ def index(request):
         context["games"] = games
 
         return render(request, 'logpose/home.html', context)
-   return HttpResponse("No Games Found")
+    return HttpResponse("No Games Found")
 
 
 def search_games(request):
@@ -48,7 +48,7 @@ def search_games(request):
         game_name = form.cleaned_data['game']
         genre = form.cleaned_data['genre']
         stars = form.cleaned_data['stars']
-        year = str(form.cleaned_data['year'])[:-6]
+        year = str(form.cleaned_data['year'])
         print(form)
         return HttpResponse(f"Game: {game_name}, Genre: {genre}, Stars: {stars}, Year: {year}"  )
     return HttpResponse("Fail ")

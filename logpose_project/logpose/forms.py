@@ -23,4 +23,4 @@ class GameSearchForm(forms.Form):
     game = forms.CharField(required=False)
     genre = forms.CharField(required=False)
     stars = forms.IntegerField(required=False)
-    year = forms.DateField(required=False)
+    year = forms.IntegerField(required=False)
