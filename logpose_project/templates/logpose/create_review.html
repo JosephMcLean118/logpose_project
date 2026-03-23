@@ -1,13 +1,47 @@
 {% extends 'logpose/base.html' %}
 
-{% block body_block %}
-<div class="container mt-4">
-    <h1>Write a Review</h1>
+{% block title_block %}Write a Review{% endblock %}
 
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-success">Submit</button>
-    </form>
+{% block body_block %}
+<div class="row justify-content-center mt-5">
+  <div class="col-md-8 col-lg-6">
+    <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+      <div class="card-body p-4">
+        <h1 class="text-center mb-4 fw-bold">Write a Review</h1>
+
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Game</label>
+            {{ form.game }}
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold d-block">Rating</label>
+            <div class="d-flex flex-wrap gap-3">
+              {% for radio in form.rating %}
+                <div class="form-check form-check-inline">
+                  {{ radio.tag }}
+                  <label class="form-check-label" for="{{ radio.id_for_label }}">
+                    {{ radio.choice_label }} ★
+                  </label>
+                </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Body</label>
+            {{ form.body }}
+          </div>
+
+          <button type="submit" class="btn btn-accent w-100 mt-2">
+            Submit Review
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
