@@ -1,0 +1,13 @@
+{% extends 'logpose/base.html' %}
+
+{% block body_block %}
+<div class="container mt-4">
+    <h1>Write a Review</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+</div>
+{% endblock %}
