@@ -1,0 +1,11 @@
+#Kai----------------------
+
+{% if profile.profile_image %}
+    <img src="{{ profile.profile_image.url }}" width="150">
+{% else %}
+    <p>nothing</p>
+{% endif %}
+
+<p>Bio：{{ profile.bio|default:"Nothing" }}</p>
+
+<p>AverageRating：{{ profile.avg_rating_given|default:"0" }}</p>

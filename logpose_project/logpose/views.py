@@ -1,19 +1,44 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from logpose.models import Review, UserProfile
-from logpose.forms import ReviewForm
-
-# Create your views here.
+from logpose.models import UserProfile, Message, Review 
 from django.http import HttpResponse
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg, Count
 from logpose.models import Game, Genre, Review
-from logpose.forms import UserForm, UserProfileForm, GameSearchForm
+from logpose.forms import UserForm, UserProfileForm, GameSearchForm, ReviewForm
 
-# index should return homepage
-def index(request):
+
+def profile_view(request, username):
+    from django.contrib.auth.models import User
+    target_user = get_object_or_404(User, username=username)
+
+    profile, created = UserProfile.objects.get_or_create(user=target_user)
+    
+    messages = Message.objects.filter(receiver=target_user).order_by('-created_at')
+    
+    return render(request, 'profile.html', {
+        'target_user': target_user,
+        'profile': profile, 
+        'messages': messages,
+        'is_me': (request.user == target_user),
+    })
+
+def edit_profile(request):
+    profile, _ = UserProfile.objects.get_or_create(user=request.user)
+    
+    if request.method == 'POST':
+        profile.bio = request.POST.get('bio', profile.bio)
+        if 'profile_image' in request.FILES:
+            profile.profile_image = request.FILES['profile_image']
+        profile.save()
+        return redirect('profile', username=request.user.username)
+    
+    return render(request, 'edit_profile.html', {'profile': profile})
+#-------------------------------------------------------------------------
+def index(request)
     """
     Return render of homepage template.
     Context dictionary contains: All games, genres, most_popular_game
@@ -63,31 +88,6 @@ def create_review(request):
         form = ReviewForm()
 
     return render(request, 'logpose/create_review.html', {'form': form})
-    """
-    Return render of homepage template.
-    Context dictionary contains: All games, genres, most_popular_game
-    """
-    context = {}
-
-    games = Game.objects.all()
-    genres = Genre.objects.all()
-
-    if not games.exists():
-        return HttpResponse("No Games Found")
-
-    # Find most popular game
-    most_popular_game = max(games, key=lambda g: g.avg_rating() or 0)
-    context["popular_game"] = most_popular_game
-
-    # Get all genre names as a list then join as string
-    genre_names = most_popular_game.genres.values_list('name', flat=True)
-    most_popular_game.genre_list = ", ".join(genre_names)
-
-    context["genres"] = genres
-    context["games"] = games
-
-    return render(request, 'logpose/home.html', context)
-
 
 
 def search_games(request):
