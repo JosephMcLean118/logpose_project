@@ -57,7 +57,9 @@ ROOT_URLCONF = "logpose_project.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [TEMPLATE_DIR, ],
+        #kai--------------------------------
+        "DIRS": [TEMPLATE_DIR, 'templates'],
+        #------------------------------------
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -130,4 +132,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
+#Kai--------
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_URL = '/login/'

@@ -47,6 +47,16 @@ class UserProfile(models.Model):
     def __str__(self):
         return self.user.username
 
+#new addon by kai----------------------------
+
+class Message(models.Model):
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_messages')
+    name = models.CharField(max_length=100)
+    content = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+#----------------------------------------------
+
 class Review(models.Model):
     RATING_CHOICES = [(i, i) for i in range(1, 6)]
     
