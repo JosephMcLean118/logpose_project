@@ -18,7 +18,6 @@ def populate():
     
     print("Starting population script...")
 
-    
     # Creating genres
     # Dictionary to store genre objects for later use
     genres = {}
@@ -44,7 +43,7 @@ def populate():
                 release_date=row['Release Date'],
                 image=row['Image']
             )
-            
+
             # Add genres to game (ManyToMany relationship)
             # Checks if Genre1,2,3 exists and are not empty
             if row.get('Genre1') and row['Genre1'].strip():
