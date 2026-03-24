@@ -210,7 +210,7 @@ def reviews(request):
     
     # Filters by YEAR
     year_filter = request.GET.get('year')
-    if year_filter != 'None':
+    if year_filter and year_filter != 'None':
         reviews = reviews.filter(game__release_date__year=year_filter)
     
     # Search by GAME NAME
