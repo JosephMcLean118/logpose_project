@@ -1,13 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from logpose.models import UserProfile, Message, Review 
+from logpose.models import UserProfile, Game, Genre, Review 
 from django.http import HttpResponse
 from django.urls import reverse
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
 from django.db.models import Avg, Count
-from logpose.models import Game, Genre, Review
 from logpose.forms import UserForm, UserProfileForm, GameSearchForm, ReviewForm
 
 
@@ -16,13 +14,10 @@ def profile_view(request, username):
     target_user = get_object_or_404(User, username=username)
 
     profile, created = UserProfile.objects.get_or_create(user=target_user)
-    
-    messages = Message.objects.filter(receiver=target_user).order_by('-created_at')
-    
-    return render(request, 'profile.html', {
+        
+    return render(request, 'logpose/profile.html', {
         'target_user': target_user,
-        'profile': profile, 
-        'messages': messages,
+        'profile': profile,
         'is_me': (request.user == target_user),
     })
 
@@ -34,10 +29,10 @@ def edit_profile(request):
         if 'profile_image' in request.FILES:
             profile.profile_image = request.FILES['profile_image']
         profile.save()
-        return redirect('profile', username=request.user.username)
+        return redirect('logpose:profile', username=request.user.username)
     
-    return render(request, 'edit_profile.html', {'profile': profile})
-#-------------------------------------------------------------------------
+    return render(request, 'logpose/edit_profile.html', {'profile': profile})
+
 def index(request):
     """
     Return render of homepage template.
@@ -66,7 +61,6 @@ def index(request):
   
 def review_detail(request, review_id):
     review = get_object_or_404(Review, id=review_id)
-
     profile = UserProfile.objects.filter(user=review.user).first()
 
     context = {
@@ -75,13 +69,13 @@ def review_detail(request, review_id):
     }
     return render(request, 'logpose/review_detail.html', context)
 
-
+@login_required
 def create_review(request):
     if request.method == 'POST':
         form = ReviewForm(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
-            review.user = User.objects.first()
+            review.user = request.user
             review.save()
             return redirect('logpose:review_detail', review_id=review.id)
     else:
@@ -92,10 +86,6 @@ def create_review(request):
 def search_games(request):
     """
     Return filtered render of reviews page template.
-    ------------
-    NOT COMPLETE
-    ------------
-    Will complete once reviews page is made
     """
     form = GameSearchForm(request.GET)
     if form.is_valid():
@@ -103,21 +93,35 @@ def search_games(request):
         genre = form.cleaned_data['genre']
         stars = form.cleaned_data['stars']
         year = str(form.cleaned_data['year'])
-        print(form)
-        return HttpResponse(f"Game: {game_name}, Genre: {genre}, Stars: {stars}, Year: {year}"  )
-    return HttpResponse("Fail ")
+        
+        # Build redirect URL to reviews page with filters
+        url = reverse('logpose:reviews')
+        params = []
+        if game_name:
+            params.append(f'search={game_name}')
+        if genre:
+            params.append(f'genre={genre}')
+        if stars:
+            params.append(f'rating={stars}')
+        if year:
+            params.append(f'year={year}')
+        if params:
+            url += '?' + '&'.join(params)
+        return redirect(url)
+    return redirect('logpose:reviews')
+
 
 def reviews_for_game(request, slug):
     """
     Return render of reviews page, filtered by games name
-    ------------
-    NOT COMPLETE
-    ------------
-    Will complete once reviews page is made
+
     """
     game = get_object_or_404(Game, slug=slug)
-    reviews = game.review_set.all()  # gets all reviews for this game
-    return HttpResponse(f"Game: {game.title}, Reviews: {reviews}")
+    #reviews = game.review_set.all()  # gets all reviews for this game
+    # we dont need to get all the reviews we can just redirect it reversely
+    #  to the reviews page
+    url = reverse('logpose:reviews') + f'?search={game.title}'
+    return redirect(url)
 
 
 
@@ -230,4 +234,3 @@ def reviews(request):
         'current_search': search_query,
     }
     return render(request, 'logpose/reviews.html', context)
-

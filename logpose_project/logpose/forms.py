@@ -5,7 +5,17 @@ from django.contrib.auth.models import User
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ["game", "rating", "body",]
+        fields = ["game", "rating", "body"]
+        widgets = {
+            'game': forms.Select(attrs={'class': 'form-select'}),
+            'rating': forms.RadioSelect(),
+            'body': forms.Textarea(attrs={
+                'class': 'form-control',
+                'rows': 5,
+                'placeholder': 'Write your review here...'
+            }),
+        }
+
 
 class UserForm(forms.ModelForm):
     password = forms.CharField(widget=forms.PasswordInput())

@@ -9,7 +9,7 @@
                 <div class="hold title">
                     <h1>Most Popular Game</h1>
                     <div class="card h-100" style="width: 31rem;">
-                        <img src="{% static 'styles/Images/fortnite.jpg' %}" class="card-img-top" width="494px" height="278px">
+                        <img src="{{ popular_game.image.url }}" class="card-img-top" width="494px" height="278px" alt="{{ popular_game.title }}">
                         <div class="card-body">
                             <h5 class="card-title">{{ popular_game.title }}</h5>
                             <ul>
