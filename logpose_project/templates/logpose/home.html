@@ -47,7 +47,7 @@
                                 <label for="gameSearch" class="form-label"><h5>Filters</h5></label>
                                 <div class="mb-3">
                                     <select class="form-select" name="genre">
-                                        <option value="RPG">Genres</option>
+                                        <option value="">Genres</option>
                                         {% for genre in genres %}
                                             <option value="{{ genre }}">{{ genre.name }}</option>
                                         {% endfor %}
@@ -68,7 +68,7 @@
                                         <div class="col-sm-6 mb-3">
                                         <label for="yearSelect" class="form-label">Release Year:</label>
                                         <input type="number" id="year" name="year" class="form-control"
-                                            min="2000" max="2026" step="1" value="2006">
+                                            min="2000" max="2026" step="1" placeholder="All years">
                                         </div>
                                     </div>
                                 <!-- Submit button -->
