@@ -22,7 +22,7 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg sticky-top">
       <div class="container">
-        <a class="navbar-brand fw-bold" href="/">
+        <a class="navbar-brand fw-bold" href="{% url 'logpose:index' %}">
           <i class="bi bi-compass"></i> Logpose
         </a>
 
@@ -38,7 +38,7 @@
         <div class="collapse navbar-collapse" id="navbarNav">
           <ul class="navbar-nav me-auto">
             <li class="nav-item">
-              <a class="nav-link" href="/">Home</a>
+              <a class="nav-link" href="{% url 'logpose:index' %}">Home</a>
             </li>
             <li class="nav-item">
               <a class="nav-link" href="{% url 'logpose:reviews' %}">Reviews</a>

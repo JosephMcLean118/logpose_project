@@ -57,9 +57,7 @@ ROOT_URLCONF = "logpose_project.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        #kai--------------------------------
         "DIRS": [TEMPLATE_DIR, 'templates'],
-        #------------------------------------
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
