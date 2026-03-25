@@ -73,18 +73,24 @@ def create_review(request):
     if request.method == 'POST':
         form = ReviewForm(request.POST)
         if form.is_valid():
+            game = form.cleaned_data['game']
+            # Check if user has already reviewed this game
+            if Review.objects.filter(user=request.user, game=game).exists():
+                return render(request, 'logpose/create_review.html', {
+                    'form': form,
+                    'duplicate_error': True
+                })
             review = form.save(commit=False)
             review.user = request.user
             review.save()
             return redirect('logpose:review_detail', review_id=review.id)
     else:
         form = ReviewForm()
-
     return render(request, 'logpose/create_review.html', {'form': form})
 
 def search_games(request):
     """
-    Return filtered render of reviews page template.
+    Redirects to reviews page with filters applied from homepage search form.
     """
     form = GameSearchForm(request.GET)
     if form.is_valid():
@@ -113,12 +119,8 @@ def search_games(request):
 def reviews_for_game(request, slug):
     """
     Return render of reviews page, filtered by games name
-
     """
     game = get_object_or_404(Game, slug=slug)
-    #reviews = game.review_set.all()  # gets all reviews for this game
-    # we dont need to get all the reviews we can just redirect it reversely
-    #  to the reviews page
     url = reverse('logpose:reviews') + f'?search={game.title}'
     return redirect(url)
 

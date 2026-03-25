@@ -11,6 +11,13 @@
 
         <form method="post">
           {% csrf_token %}
+          
+          <!-- Show warning if user has already reviewed this game -->
+          {% if duplicate_error %}
+          <div class="alert alert-warning">
+            You have already reviewed this game.
+          </div>
+          {% endif %}
 
           <div class="mb-3">
             <label class="form-label fw-semibold">Game</label>
@@ -33,12 +40,16 @@
               <span class="star fs-2 text-secondary" data-value="4" style="cursor:pointer;">★</span>
               <span class="star fs-2 text-secondary" data-value="5" style="cursor:pointer;">★</span>
             </div>
+            <!-- Show specific error if star rating was not selected -->
+            {% if form.rating.errors %}
+              <small class="text-danger">Please select a star rating.</small>
+            {% endif %}
           </div>
 
           <div class="mb-3">
-            <label class="form-label fw-semibold">Body</label>
+            <label class="form-label fw-semibold">Your Review</label>
             <!-- Custom textarea with maxlength character counter below tracks input length via JS -->
-            <textarea name="body" id="reviewBody" class="form-control" rows="5" placeholder="Write your review here..." maxlength="500"></textarea>
+            <textarea name="body" id="reviewBody" class="form-control" rows="5" placeholder="Write your review here..." maxlength="500" required></textarea>
             <small class="text-muted"><span id="charCount">0</span>/500 characters</small>
           </div>
 
@@ -85,6 +96,15 @@
       if (radioInput) radioInput.checked = true;
     });
   });
+  // On page reload after failed submission, restore visual star state from hidden input
+  const checkedRating = document.querySelector('input[name="rating"]:checked');
+  if (checkedRating) {
+    selectedRating = parseInt(checkedRating.value);
+    stars.forEach(s => {
+      s.classList.toggle('text-warning', parseInt(s.dataset.value) <= selectedRating);
+      s.classList.toggle('text-secondary', parseInt(s.dataset.value) > selectedRating);
+    });
+}
   // Character counter - updates on every keystroke and turns red when nearing the 500 limit
   const reviewBody = document.getElementById('reviewBody');
   const charCount = document.getElementById('charCount');

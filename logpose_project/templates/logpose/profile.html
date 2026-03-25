@@ -32,9 +32,17 @@
           </div>
         </div>
 
+        <!-- Total Reviews -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Total Reviews Made :</label>
+          <div>
+            <span class="text-secondary">{{ target_user.review_set.count }} review{{ target_user.review_set.count|pluralize }}</span>
+          </div>
+        </div>
+
         <!-- Average Rating -->
         <div class="mb-3">
-          <label class="form-label fw-semibold">Average Rating</label>
+          <label class="form-label fw-semibold">Average Rating Given :</label>
           <div>
             {% if profile.avg_rating_given %}
               <span class="text-warning">&#11088; {{ profile.avg_rating_given }}</span>
