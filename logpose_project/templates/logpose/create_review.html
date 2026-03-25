@@ -19,11 +19,13 @@
 
           <div class="mb-3">
             <label class="form-label fw-semibold d-block">Rating</label>
+            <!-- Hidden radio inputs i kept for Django form validation but replaced visually with stars below -->
             <div style="display:none;">
               {% for radio in form.rating %}
                   {{ radio.tag }}
               {% endfor %}
             </div>
+            <!-- Visual star rating JS below handles hover and click interactions -->
             <div class="d-flex gap-2">
               <span class="star fs-2 text-secondary" data-value="1" style="cursor:pointer;">★</span>
               <span class="star fs-2 text-secondary" data-value="2" style="cursor:pointer;">★</span>
@@ -35,6 +37,7 @@
 
           <div class="mb-3">
             <label class="form-label fw-semibold">Body</label>
+            <!-- Custom textarea with maxlength character counter below tracks input length via JS -->
             <textarea name="body" id="reviewBody" class="form-control" rows="5" placeholder="Write your review here..." maxlength="500"></textarea>
             <small class="text-muted"><span id="charCount">0</span>/500 characters</small>
           </div>
@@ -48,11 +51,12 @@
   </div>
 </div>
 <script>
+    // Select all star elements and track the currently selected rating
   const stars = document.querySelectorAll('.star');
-  const starLabel = document.getElementById('star-label');
   let selectedRating = 0;
 
   stars.forEach(star => {
+    // Hover over: highlight all stars up to the hovered one
     star.addEventListener('mouseover', function () {
       const val = parseInt(this.dataset.value);
       stars.forEach(s => {
@@ -61,6 +65,7 @@
       });
     });
 
+    // Mouse out: restore to the currently selected rating state
     star.addEventListener('mouseout', function () {
       stars.forEach(s => {
         s.classList.toggle('text-warning', parseInt(s.dataset.value) <= selectedRating);
@@ -68,18 +73,19 @@
       });
     });
 
+    // Click: lock in the selected rating and sync with hidden Django radio input
     star.addEventListener('click', function () {
       selectedRating = parseInt(this.dataset.value);
       stars.forEach(s => {
         s.classList.toggle('text-warning', parseInt(s.dataset.value) <= selectedRating);
         s.classList.toggle('text-secondary', parseInt(s.dataset.value) > selectedRating);
       });
+      // Find and check the corresponding hidden radio input so Django receives the value
       const radioInput = document.querySelector(`input[name="rating"][value="${selectedRating}"]`);
       if (radioInput) radioInput.checked = true;
-      starLabel.textContent = `${selectedRating}/5`;
     });
   });
-
+  // Character counter - updates on every keystroke and turns red when nearing the 500 limit
   const reviewBody = document.getElementById('reviewBody');
   const charCount = document.getElementById('charCount');
   reviewBody.addEventListener('input', function () {

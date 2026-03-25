@@ -27,25 +27,26 @@
             >
           {% endif %}
           <div>
-            <div class="fw-semibold">{{ review.user.username }}</div>
-            <small class="text-secondary">{{ review.created_at|date:"d M Y, H:i" }}</small>
+            <div class="fw-semibold"><a href="{% url 'logpose:profile' username=review.user.username %}">{{ review.user.username }}</a></div>
+            <small class="text-secondary">Posted on {{ review.created_at|date:"d M Y, H:i" }}</small>
           </div>
         </div>
 
         <p class="mb-3 fs-5">
           {% for i in "12345" %}
             {% if forloop.counter <= review.rating %}
-              ★
+              <span class="text-warning">⭐</span>
             {% else %}
-              ☆
+              <span class="text-muted">☆</span>
             {% endif %}
           {% endfor %}
+          <span class="text-muted ms-2">{{ review.rating }}/5</span>
         </p>
 
         <p class="mb-4">{{ review.body }}</p>
 
         <a href="{% url 'logpose:create_review' %}" class="btn btn-accent">
-          Write another review
+          Write a review
         </a>
       </div>
     </div>
