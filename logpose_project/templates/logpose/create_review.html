@@ -19,21 +19,24 @@
 
           <div class="mb-3">
             <label class="form-label fw-semibold d-block">Rating</label>
-            <div class="d-flex flex-wrap gap-3">
+            <div style="display:none;">
               {% for radio in form.rating %}
-                <div class="form-check form-check-inline">
                   {{ radio.tag }}
-                  <label class="form-check-label" for="{{ radio.id_for_label }}">
-                    {{ radio.choice_label }} ★
-                  </label>
-                </div>
               {% endfor %}
+            </div>
+            <div class="d-flex gap-2">
+              <span class="star fs-2 text-secondary" data-value="1" style="cursor:pointer;">★</span>
+              <span class="star fs-2 text-secondary" data-value="2" style="cursor:pointer;">★</span>
+              <span class="star fs-2 text-secondary" data-value="3" style="cursor:pointer;">★</span>
+              <span class="star fs-2 text-secondary" data-value="4" style="cursor:pointer;">★</span>
+              <span class="star fs-2 text-secondary" data-value="5" style="cursor:pointer;">★</span>
             </div>
           </div>
 
           <div class="mb-3">
             <label class="form-label fw-semibold">Body</label>
-            {{ form.body }}
+            <textarea name="body" id="reviewBody" class="form-control" rows="5" placeholder="Write your review here..." maxlength="500"></textarea>
+            <small class="text-muted"><span id="charCount">0</span>/500 characters</small>
           </div>
 
           <button type="submit" class="btn btn-accent w-100 mt-2">
@@ -44,4 +47,45 @@
     </div>
   </div>
 </div>
+<script>
+  const stars = document.querySelectorAll('.star');
+  const starLabel = document.getElementById('star-label');
+  let selectedRating = 0;
+
+  stars.forEach(star => {
+    star.addEventListener('mouseover', function () {
+      const val = parseInt(this.dataset.value);
+      stars.forEach(s => {
+        s.classList.toggle('text-warning', parseInt(s.dataset.value) <= val);
+        s.classList.toggle('text-secondary', parseInt(s.dataset.value) > val);
+      });
+    });
+
+    star.addEventListener('mouseout', function () {
+      stars.forEach(s => {
+        s.classList.toggle('text-warning', parseInt(s.dataset.value) <= selectedRating);
+        s.classList.toggle('text-secondary', parseInt(s.dataset.value) > selectedRating);
+      });
+    });
+
+    star.addEventListener('click', function () {
+      selectedRating = parseInt(this.dataset.value);
+      stars.forEach(s => {
+        s.classList.toggle('text-warning', parseInt(s.dataset.value) <= selectedRating);
+        s.classList.toggle('text-secondary', parseInt(s.dataset.value) > selectedRating);
+      });
+      const radioInput = document.querySelector(`input[name="rating"][value="${selectedRating}"]`);
+      if (radioInput) radioInput.checked = true;
+      starLabel.textContent = `${selectedRating}/5`;
+    });
+  });
+
+  const reviewBody = document.getElementById('reviewBody');
+  const charCount = document.getElementById('charCount');
+  reviewBody.addEventListener('input', function () {
+    const count = this.value.length;
+    charCount.textContent = count;
+    charCount.classList.toggle('text-danger', count > 450);
+  });
+</script>
 {% endblock %}
