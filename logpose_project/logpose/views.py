@@ -84,7 +84,7 @@ def create_review(request):
 
 def search_games(request):
     """
-    Return filtered render of reviews page template.
+    Redirects to reviews page with filters applied from homepage search form.
     """
     form = GameSearchForm(request.GET)
     if form.is_valid():
@@ -113,12 +113,8 @@ def search_games(request):
 def reviews_for_game(request, slug):
     """
     Return render of reviews page, filtered by games name
-
     """
     game = get_object_or_404(Game, slug=slug)
-    #reviews = game.review_set.all()  # gets all reviews for this game
-    # we dont need to get all the reviews we can just redirect it reversely
-    #  to the reviews page
     url = reverse('logpose:reviews') + f'?search={game.title}'
     return redirect(url)
 
