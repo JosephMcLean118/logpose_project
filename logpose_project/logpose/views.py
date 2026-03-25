@@ -10,7 +10,6 @@ from logpose.forms import UserForm, UserProfileForm, GameSearchForm, ReviewForm
 
 
 def profile_view(request, username):
-    from django.contrib.auth.models import User
     target_user = get_object_or_404(User, username=username)
 
     profile, created = UserProfile.objects.get_or_create(user=target_user)
@@ -218,7 +217,7 @@ def reviews(request):
     if search_query:
         reviews = reviews.filter(game__title__icontains=search_query)
     
-    # TOP 5 GAMES by average rating (only games with reviews)
+    # TOP 10 GAMES by average rating (only games with reviews)
     top_games = Game.objects.annotate(
         avg_rating=Avg('review__rating'),
         review_count=Count('review')
