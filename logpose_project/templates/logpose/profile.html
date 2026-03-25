@@ -1,45 +1,61 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>{{ target_user.username }} Home Page</title>
-</head>
-<body>
+{% extends 'logpose/base.html' %}
 
-    <div style="max-width: 600px; margin: 20px auto; border: 1px solid #ddd; padding: 20px; border-radius: 10px;">
-        
-        <h2>{{ target_user.username }} Profile</h2>
+{% block title_block %}{{ target_user.username }}'s Profile{% endblock %}
 
-        <div style="text-align: center; margin-bottom: 20px;">
-            {% if profile.profile_image %}
-                <img src="{{ profile.profile_image.url }}" alt="image" style="width:150px; height:150px; border-radius:50%; object-fit: cover; border: 2px solid #eee;">
-            {% else %}
-                <div style="width:150px; height:150px; border-radius:50%; background: #eee; line-height: 150px; margin: 0 auto;">ʕ•̀ ω • ʔ</div>
-            {% endif %}
-        </div>
+{% block body_block %}
+<div class="row justify-content-center mt-4">
+  <div class="col-md-8 col-lg-6">
+    <div class="card border-0 shadow-sm" style="border-radius: 12px;">
+      <div class="card-body p-4">
 
-        <p><strong>Bio：</strong></p>
-        <div style="background: #f9f9f9; padding: 10px; border-radius: 5px; min-height: 50px;">
-            {{ profile.bio|default:"Nothing" }}
-        </div>
+        <h2 class="text-center fw-bold mb-4">{{ target_user.username }}'s Profile</h2>
 
-        <p><strong>AverageRating：</strong> 
-            {% if profile.avg_rating_given %}
-                <span style="color: #f39c12;">★ {{ profile.avg_rating_given }}</span>
-            {% else %}
-                <span style="color: #999;">Nothing</span>
-            {% endif %}
-        </p>
-
-        <hr>
-
-        {% if is_me %}
-            <div style="text-align: right;">
-                <a href="{% url 'logpose:edit_profile' %}">
-                    <button style="padding: 8px 16px; cursor: pointer;">edit_profile</button>
-                </a>
+        <!-- Profile Image -->
+        <div class="text-center mb-4">
+          {% if profile.profile_image %}
+            <img src="{{ profile.profile_image.url }}" alt="{{ target_user.username }}"
+                 class="rounded-circle border"
+                 style="width: 150px; height: 150px; object-fit: cover;">
+          {% else %}
+            <div class="rounded-circle bg-light d-inline-flex align-items-center justify-content-center border"
+                 style="width: 150px; height: 150px; font-size: 1.5rem;">
+              <i class="bi bi-person-fill text-secondary" style="font-size: 3rem;"></i>
             </div>
-        {% endif %}
-    </div>
+          {% endif %}
+        </div>
 
-</body>
-</html>
+        <!-- Bio -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Bio</label>
+          <div class="p-3 rounded" style="background-color: var(--bg-secondary); min-height: 50px;">
+            {{ profile.bio|default:"No bio yet." }}
+          </div>
+        </div>
+
+        <!-- Average Rating -->
+        <div class="mb-3">
+          <label class="form-label fw-semibold">Average Rating</label>
+          <div>
+            {% if profile.avg_rating_given %}
+              <span class="text-warning">&#11088; {{ profile.avg_rating_given }}</span>
+            {% else %}
+              <span class="text-secondary">No ratings yet.</span>
+            {% endif %}
+          </div>
+        </div>
+
+        <!-- Edit Button -->
+        {% if is_me %}
+          <hr>
+          <div class="text-end">
+            <a href="{% url 'logpose:edit_profile' %}" class="btn btn-accent">
+              Edit Profile
+            </a>
+          </div>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
