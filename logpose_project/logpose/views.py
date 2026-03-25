@@ -222,7 +222,7 @@ def reviews(request):
     top_games = Game.objects.annotate(
         avg_rating=Avg('review__rating'),
         review_count=Count('review')
-    ).filter(review_count__gt=0).order_by('-avg_rating')[:5]
+    ).filter(review_count__gt=0).order_by('-avg_rating')[:10]
     
     context = {
         'reviews': reviews,
