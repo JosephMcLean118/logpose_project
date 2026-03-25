@@ -73,13 +73,19 @@ def create_review(request):
     if request.method == 'POST':
         form = ReviewForm(request.POST)
         if form.is_valid():
+            game = form.cleaned_data['game']
+            # Check if user has already reviewed this game
+            if Review.objects.filter(user=request.user, game=game).exists():
+                return render(request, 'logpose/create_review.html', {
+                    'form': form,
+                    'duplicate_error': True
+                })
             review = form.save(commit=False)
             review.user = request.user
             review.save()
             return redirect('logpose:review_detail', review_id=review.id)
     else:
         form = ReviewForm()
-
     return render(request, 'logpose/create_review.html', {'form': form})
 
 def search_games(request):

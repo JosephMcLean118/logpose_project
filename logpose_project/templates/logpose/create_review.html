@@ -12,6 +12,13 @@
         <form method="post">
           {% csrf_token %}
           
+          <!-- Show warning if user has already reviewed this game -->
+          {% if duplicate_error %}
+          <div class="alert alert-warning">
+            You have already reviewed this game.
+          </div>
+          {% endif %}
+
           <div class="mb-3">
             <label class="form-label fw-semibold">Game</label>
             {{ form.game }}
