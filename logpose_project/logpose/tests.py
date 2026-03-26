@@ -612,3 +612,89 @@ class ProfilePageTest(TestCase):
         # Assert that the bio was updated
         self.assertEqual(self.user.userprofile.bio, new_bio)
 
+# --------------------------------------------------------
+
+# -----------------Test AJAX Search-----------------------
+
+class AjaxSearchTests(TestCase):
+    def setUp(self):
+        self.genre = add_genre("RPG")
+        self.game = add_game(
+            title="Mario",
+            release_date="2020-01-01",
+            image="test.jpg"
+        )
+        self.game.genres.add(self.genre)
+        self.user = add_user(
+            username="testuser",
+            email="test@test.com",
+            password="test123",
+            bio="test bio"
+        )
+        self.review = add_review(
+            user=self.user,
+            game=self.game,
+            rating=5,
+            body="Amazing game"
+        )
+
+    # Test AJAX search returns results for matching game
+    def test_ajax_search_returns_results(self):
+        response = self.client.get(reverse('logpose:ajax_search_reviews') + '?search=Mario')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Mario')
+
+    # Test AJAX search with no query returns all reviews
+    def test_ajax_search_empty_returns_all(self):
+        response = self.client.get(reverse('logpose:ajax_search_reviews'))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Mario')
+
+    # Test AJAX search with no match returns empty message
+    def test_ajax_search_no_match(self):
+        response = self.client.get(reverse('logpose:ajax_search_reviews') + '?search=xyznonexistent')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'No reviews found')
+
+# --------------------------------------------------------
+
+# -----------------Test Duplicate Review------------------
+
+class DuplicateReviewTests(TestCase):
+    def setUp(self):
+        self.genre = add_genre("RPG")
+        self.game = add_game(
+            title="Mario",
+            release_date="2020-01-01",
+            image="test.jpg"
+        )
+        self.game.genres.add(self.genre)
+        self.user = add_user(
+            username="testuser",
+            email="test@test.com",
+            password="test123",
+            bio="test bio"
+        )
+        self.client.post(reverse("logpose:login"), {
+            'username': 'testuser',
+            'password': 'test123',
+        })
+
+    # Test duplicate review is prevented
+    def test_duplicate_review_prevented(self):
+        # First review
+        self.client.post(reverse('logpose:create_review'), {
+            'game': self.game.id,
+            'rating': 5,
+            'body': 'First review'
+        })
+        # Try duplicate
+        response = self.client.post(reverse('logpose:create_review'), {
+            'game': self.game.id,
+            'rating': 3,
+            'body': 'Second review'
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'already reviewed')
+        # Only one review should exist
+        self.assertEqual(Review.objects.filter(user=self.user, game=self.game).count(), 1)
