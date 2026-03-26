@@ -88,6 +88,13 @@ The app is designed to help gamers discover new titles, read honest community re
 The application is deployed on PythonAnywhere at:
 **[PythonAnywhere URL here]**
 
+## Testing
+
+The unit tests for the application can be run by running the follwing command inside /logpose_project
+```bash
+python manage.py test
+```
+
 ## 📚 External Sources & Acknowledgments
 
 This project makes use of the following external resources:
