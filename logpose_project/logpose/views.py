@@ -128,6 +128,9 @@ def reviews_for_game(request, slug):
 
 
 def register(request):
+    # Redirect already logged in users to homepage
+    if request.user.is_authenticated:
+        return redirect(reverse('logpose:index'))
     registered = False
 
     if request.method == 'POST':
@@ -161,6 +164,10 @@ def register(request):
 
 
 def user_login(request):
+    # redirects already logged users to homepage
+    if request.user.is_authenticated:
+        return redirect(reverse('logpose:index'))
+    
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
