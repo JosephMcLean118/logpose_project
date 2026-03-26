@@ -1,3 +1,4 @@
+from django.core.validators import FileExtensionValidator
 from django import forms
 from logpose.models import Genre, Game, UserProfile, Review
 from django.contrib.auth.models import User
@@ -24,6 +25,12 @@ class UserForm(forms.ModelForm):
         fields = ('username', 'email', 'password',)
 
 class UserProfileForm(forms.ModelForm):
+    # Only allow jpg and png profile pictures
+    profile_image = forms.ImageField(
+        required=False,
+        validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])],
+        widget=forms.FileInput(attrs={'accept': '.jpg,.jpeg,.png'})
+    )
     class Meta:
         model = UserProfile
         fields = ('bio', 'profile_image',)

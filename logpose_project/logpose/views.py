@@ -22,15 +22,18 @@ def profile_view(request, username):
 
 def edit_profile(request):
     profile, _ = UserProfile.objects.get_or_create(user=request.user)
+
+        if request.method == 'POST':
+        # Use form for validation including file type and bio length checks
+        form = UserProfileForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return redirect('logpose:profile', username=request.user.username)
+        # Form invalid - re-render with errors
+        return render(request, 'logpose/edit_profile.html', {'profile': profile, 'form': form})
     
-    if request.method == 'POST':
-        profile.bio = request.POST.get('bio', profile.bio)
-        if 'profile_image' in request.FILES:
-            profile.profile_image = request.FILES['profile_image']
-        profile.save()
-        return redirect('logpose:profile', username=request.user.username)
-    
-    return render(request, 'logpose/edit_profile.html', {'profile': profile})
+    form = UserProfileForm(instance=profile)
+    return render(request, 'logpose/edit_profile.html', {'profile': profile, 'form': form})
 
 def index(request):
     """
