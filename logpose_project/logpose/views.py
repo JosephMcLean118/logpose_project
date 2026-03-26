@@ -20,10 +20,11 @@ def profile_view(request, username):
         'is_me': (request.user == target_user),
     })
 
+@login_required
 def edit_profile(request):
     profile, _ = UserProfile.objects.get_or_create(user=request.user)
 
-        if request.method == 'POST':
+    if request.method == 'POST':
         # Use form for validation including file type and bio length checks
         form = UserProfileForm(request.POST, request.FILES, instance=profile)
         if form.is_valid():
