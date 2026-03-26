@@ -54,6 +54,16 @@
                      placeholder="Create a password" required
                      style="border-radius: 8px; border-color: var(--border);">
             </div>
+            <!-- Show form errors if registration fails e.g. username already taken -->
+            {% if user_form.errors %}
+            <div class="alert alert-danger py-2 small mt-2">
+              {% for field, errors in user_form.errors.items %}
+                {% for error in errors %}
+                  {{ error }}
+                {% endfor %}
+              {% endfor %}
+            </div>
+            {% endif %}
 
             <button type="button" id="continueBtn" class="btn btn-accent w-100 mt-2">
               Continue
