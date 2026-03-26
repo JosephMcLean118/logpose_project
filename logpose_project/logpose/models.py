@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
+from django.core.validators import FileExtensionValidator
 
 class Genre(models.Model):
     # Stores game genres
@@ -44,9 +45,10 @@ class UserProfile(models.Model):
     Extends Djangos built in user model with additional profile fields.
     """
     user = models.OneToOneField(User, on_delete=models.CASCADE) # each user only has 1 profile
-    bio = models.TextField(blank=True)
-    profile_image = models.ImageField(upload_to='profile_images', blank=True)
-
+    bio = models.TextField(blank=True, max_length=300)  # Limit bio to 300 characters
+    profile_image = models.ImageField(upload_to='profile_images', blank=True,
+                                      validators=[FileExtensionValidator(allowed_extensions=['jpg', 'jpeg', 'png'])])  
+    # Validator Only allows jpg and png
     def avg_rating_given(self):
         """
         calculates the average star rating
@@ -67,7 +69,7 @@ class Review(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     game = models.ForeignKey(Game, on_delete=models.CASCADE)
     rating = models.IntegerField(choices=RATING_CHOICES)
-    body = models.TextField()
+    body = models.TextField(max_length=500)
     created_at = models.DateTimeField(auto_now_add=True)
     class Meta:
         # Ensures a user can only review each game once
