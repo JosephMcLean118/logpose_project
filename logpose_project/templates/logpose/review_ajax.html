@@ -1,0 +1,49 @@
+{% load static %}
+
+{% if reviews %}
+    {% for review in reviews %}
+    <div class="card mb-3">
+        <div class="row g-0">
+            <div class="col-md-3">
+                {% if review.game.image %}
+                <img src="{{ review.game.image.url }}" 
+                     class="img-fluid rounded-start h-100" 
+                     alt="{{ review.game.title }}"
+                     style="object-fit: cover;">
+                {% else %}
+                <div class="bg-secondary h-100 d-flex align-items-center justify-content-center">
+                    <span class="text-white">No Image</span>
+                </div>
+                {% endif %}
+            </div>
+            <div class="col-md-9">
+                <div class="card-body">
+                    <h5 class="card-title">{{ review.game.title }}</h5>
+                    <div class="mb-2">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= review.rating %}
+                                <span class="text-warning">⭐</span>
+                            {% else %}
+                                <span class="text-muted">☆</span>
+                            {% endif %}
+                        {% endfor %}
+                        <span class="text-muted ms-2">{{ review.rating }}/5</span>
+                    </div>
+                    <p class="card-text">{{ review.body }}</p>
+                    <p class="card-text">
+                        <small class="text-muted">
+                            Review by <strong><a href="{% url 'logpose:profile' username=review.user.username %}">{{ review.user.username }}</a></strong>
+                            on {{ review.created_at|date:"M d, Y" }}
+                        </small>
+                    </p>
+                    <a href="{% url 'logpose:review_detail' review_id=review.id %}" class="btn btn-outline-primary btn-sm">Read Full Review</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="alert alert-info">
+        No reviews found matching your filters.
+    </div>
+{% endif %}

@@ -37,7 +37,8 @@
                             <div class="col-md-6">
                                 <input type="text" 
                                        class="form-control" 
-                                       name="search" 
+                                       name="search"
+                                       id="search-input"
                                        placeholder="Search game title..."
                                        value="{{ current_search|default:'' }}">
                             </div>
@@ -76,7 +77,8 @@
             
             <!-- REVIEWS LIST -->
             <h3>Reviews ({{ reviews.count }})</h3>
-            
+
+            <div id="reviews-container">
             {% if reviews %}
                 {% for review in reviews %}
                 <div class="card mb-3">
@@ -137,6 +139,7 @@
                 </div>
             {% endif %}
         </div>
+        </div>
         
         <!-- RIGHT: TOP 10 SIDEBAR -->
         <div class="col-md-4">
@@ -159,4 +162,16 @@
         </div>
     </div>
 </div>
+<script>
+    // AJAX live search - updates reviews without page reload
+    let debounceTimer;
+    document.getElementById('search-input').addEventListener('input', function () {
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            fetch(`/reviews/ajax-search/?search=${encodeURIComponent(this.value)}`)
+                .then(r => r.text())
+                .then(html => document.getElementById('reviews-container').innerHTML = html);
+        }, 300);
+    });
+</script>
 {% endblock %}

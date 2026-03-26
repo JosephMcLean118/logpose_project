@@ -188,6 +188,16 @@ def user_logout(request):
     logout(request)
     return redirect(reverse('logpose:index'))
 
+def ajax_search_reviews(request):
+    """
+    Handles AJAX live search returns partial HTML of filtered reviews.
+    """
+    search_query = request.GET.get('search', '')
+    reviews = Review.objects.all().select_related('user', 'game').order_by('-created_at')
+    if search_query:
+        reviews = reviews.filter(game__title__icontains=search_query)
+    return render(request, 'logpose/review_ajax.html', {'reviews': reviews})
+
 def reviews(request):
     """
     Displays all reviews with filtering options.
