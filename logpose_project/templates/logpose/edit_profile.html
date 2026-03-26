@@ -14,14 +14,24 @@
 
           <div class="mb-3">
             <label class="form-label fw-semibold">Bio</label>
-            <textarea name="bio" rows="5" class="form-control"
-                      style="border-radius: 8px; border-color: var(--border);">{{ profile.bio }}</textarea>
+            <textarea name="bio" rows="5" class="form-control" maxlength="300" id="bioTextarea"
+                      style="border-radius: 8px; border-color: var(--border);">{{ profile.bio }}
+                      <small class="text-muted"><span id="bioCount">{{ profile.bio|length }}</span>/300 characters</small>
+            </textarea>
           </div>
 
           <div class="mb-3">
             <label class="form-label fw-semibold">Profile Picture</label>
             <input type="file" name="profile_image" class="form-control"
                    style="border-radius: 8px; border-color: var(--border);">
+            
+            <!-- Show error if invalid file type uploaded -->
+            {% if form.errors %}
+            <div class="alert alert-danger py-2 small mt-2">
+              Please upload a valid image file (jpg or png only).
+            </div>
+            {% endif %}
+
             {% if profile.profile_image.name %}
               <small class="text-secondary mt-1 d-block">Current: {{ profile.profile_image.name }}</small>
             {% endif %}
@@ -42,4 +52,13 @@
     </div>
   </div>
 </div>
+<script>
+    // Bio character counter like review charecter counter
+    const bioTextarea = document.getElementById('bioTextarea');
+    const bioCount = document.getElementById('bioCount');
+    bioTextarea.addEventListener('input', function() {
+        bioCount.textContent = this.value.length;
+        bioCount.classList.toggle('text-danger', this.value.length > 270);
+    });
+</script>
 {% endblock %}
