@@ -77,16 +77,20 @@ The app is designed to help gamers discover new titles, read honest community re
    ```
 
 8. **Access the application**
-   - Main site: http://127.0.0.1:8000/
-   - Admin panel: http://127.0.0.1:8000/admin/
+   - Main Site: http://127.0.0.1:8000/
+   - Admin Panel: http://127.0.0.1:8000/admin/
    - Reviews Page: http://127.0.0.1:8000/reviews/
    - individual Review Page: http://127.0.0.1:8000/reviews/1/
-   - Profile page (Example User: Dennis): http://127.0.0.1:8000/user/dennis/
+   - Create a Review: http://127.0.0.1:8000/reviews/create/
+   - Profile Page (Example User: Dennis): http://127.0.0.1:8000/user/dennis/
+   - Edit Profile: http://127.0.0.1:8000/edit/
+   - Login: http://127.0.0.1:8000/login/
+   - Register: http://127.0.0.1:8000/register/
 
 ## 🌐 Deployment
 
 The application is deployed on PythonAnywhere at:
-**[PythonAnywhere URL here]**
+**[https://2967122j.pythonanywhere.com]**
 
 ## Testing
 
@@ -99,9 +103,14 @@ python manage.py test
 
 This project makes use of the following external resources:
 
+### Libraries & Frameworks
+- **Bootstrap 5.3.3** - Responsive CSS framework — https://getbootstrap.com
+- **Bootstrap Icons** - Icon library — https://icons.getbootstrap.com
+- **Pillow 12.1.1** - Python image processing library — https://python-pillow.org
+
 ### Documentation & Learning Resources
-- Django Documentation - https://docs.djangoproject.com/
-- Bootstrap Documentation - https://getbootstrap.com/docs/
+- **Django Documentation** - https://docs.djangoproject.com/
+- **Bootstrap Documentation** - https://getbootstrap.com/docs/
 
 ## 👨‍💻 Team Members and Github Usernames
 
