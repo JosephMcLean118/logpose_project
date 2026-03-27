@@ -120,6 +120,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [STATIC_DIR, ]
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # Required for collectstatic on PythonAnywhere
 
 # Media files (User uploads - game images, profile pics)
 MEDIA_URL = '/media/'
